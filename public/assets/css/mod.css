@@ -1,0 +1,197 @@
+@mixin modal-fullscreen() {
+  padding: 0 !important; // override inline padding-right added from js
+  
+  .modal-dialog {
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+  }
+  
+  .modal-content {
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+  }
+  
+  .modal-body {
+    overflow-y: auto;
+  }
+ 
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-down($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+    
+    .modal-fullscreen#{$infix} {
+      @include modal-fullscreen();
+    }
+  
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+public function startLogin(User $user): void
+{
+    /** @var int|string|null $userId */
+    $userId = $this->getSessionKey('id');
+
+    // Vérifiez si l'utilisateur est déjà connecté.
+    if ($userId !== null) {
+        throw new LogicException(
+            'L\'utilisateur a des informations d\'utilisateur dans la session, il est donc déjà connecté ou en attente de connexion.'
+            . ' Si un utilisateur connecté se connecte à nouveau avec un autre compte, les données de session de l\'utilisateur précédent'
+            . ' seront utilisées comme nouvel utilisateur.'
+            . ' Corrigez votre code pour empêcher les utilisateurs de se connecter sans se déconnecter ou supprimez les données de session.'
+            . ' user_id: ' . $userId
+        );
+    }
+
+    // Si l'utilisateur n'est pas déjà connecté, vous pouvez continuer avec le processus de connexion.
+    // ...
+}
+
+
+
+
+
+
+
+
+
+
+
+ 
+    public function print_pdf() {
+
+        $dompdf = new Dompdf(); //Instanciation de la classe
+        
+        $dompdf ->setPaper('A4','portrait'); //Configuration du papier en orientation portrait
+        $html = "<h1 class='text-danger'> Bonjour le monde </h1>";
+        $dompdf -> loadHtml($html);
+        $dompdf -> render(); //Transformer HTML en PDF "rendu du PDF"
+        $dompdf -> stream(); //Afficher le PDF généré dans le navigateur
+    
+    }
+    
+    
+    
+    
+    
+    /*
+                    var divContents = $('#pdf').html();
+                    $.ajax({
+                        url: 'path_to_your_controller_method',
+                        method: 'POST',
+                        data: {'divContents': divContents},
+                        success: function(response){
+                            // Vous pouvez rediriger vers le PDF généré ici
+                        }
+                    }); */
+                    
+                    
+                    
+                    
+                     $dompdf = new Dompdf(); //Instanciation de la classe
+        
+        // Récupérez le contenu HTML de la requête AJAX
+        $html = $this->request->getPost('divContents');
+        $dompdf -> loadHtml($html);
+        $dompdf ->setPaper('A4','portrait'); //Configuration du papier en orientation portrait
+        $dompdf -> render(); //Transformer HTML en PDF "rendu du PDF
+
+        $dompdf->stream("file.pdf", array("Attachment" => false));
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        class Pdf extends Dompdf{
+
+    /**
+     * Get an insatance of CodeIgniter
+     * 
+     * @access protected
+     * @return void
+    */
+    protected function ci(){
+        return get_instance();
+    }
+
+    /**
+     * Load a CodeIgniter view into domPDF
+     * 
+     * @access public
+     * @param string $view The view to load
+     * @param array $data The view data
+     * @return void 
+     */
+    public function load_view($view,$data = array()){
+        $dompdf = new Dompdf();
+        $html = $this->ci()->load->view($view,$data,TRUE);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4','portrait'); //Configuration du papier en orientation portrait
+        $dompdf->render();
+        $dompdf->stream();
+    }
+}
+
+
+
+
+
+
+
+public function print_pdf() {
+        //$divContent= $this->request->getUri()->getSegment(2);    
+        // Récupérez le contenu HTML de la requête AJAX
+        $divContent = $this->request->getGet('divContent');
+
+        if(isset($divContent)){
+        //$options = new Options();
+        //$options->set('isRemoteEnabled', true);
+        
+        $pdf = new Dompdf();       
+      
+        $pdf->loadHtml($divContent);
+        $pdf->setPaper('A4','portrait'); //Configuration du papier en orientation portrait
+        $pdf->render();
+        $rendu = $pdf->stream("file.pdf", array("Attachment" => false));
+        echo($rendu);
+        exit(0);     
+        //echo $divContent;       
+        }
+
+        else{
+            echo ("Une erreur est survenue");
+        }
+    }
+    
+    
+    
+    
+    
+     $imagePath = getenv('IMAGE_PATH').'ipb.png';
+    $imageData = file_get_contents($imagePath);
+    $image =  '<img  class="containerings" src="data:image/png+xml;base64,' . base64_encode($imageData) . '"width="50px" height="50px" alt="Generic placeholder image">';
+    
+
+
+

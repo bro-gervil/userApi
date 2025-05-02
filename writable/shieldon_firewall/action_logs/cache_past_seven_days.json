@@ -1,0 +1,44 @@
+{
+    "ip_details": {
+        "127.0.0.1": {
+            "captcha_count": 98,
+            "captcha_success_count": 10,
+            "captcha_failure_count": 88,
+            "pageview_count": 48,
+            "action_ban_count": 0,
+            "action_temp_ban_count": 8,
+            "action_unban_count": 10,
+            "blacklist_count": 10,
+            "session_limit_count": 0,
+            "captcha_failure_percentage": 0,
+            "captcha_success_percentage": 0,
+            "session_id": {
+                "1097": 1,
+                "fd97": 1,
+                "fce9": 1,
+                "c90e": 1,
+                "d00e": 1
+            }
+        }
+    },
+    "period_data": {
+        "label_chart_string": "'Wed','Thu','Fri','Sat','Sun','Mon','Tue'",
+        "captcha_chart_string": "0,0,98,0,0,0,0",
+        "pageview_chart_string": "0,0,48,0,0,0,0",
+        "captcha_success_count": 10,
+        "captcha_failure_count": 88,
+        "captcha_count": 98,
+        "pageview_count": 48,
+        "captcha_percentageage": 67,
+        "captcha_failure_percentage": 90,
+        "captcha_success_percentage": 10,
+        "action_ban_count": 0,
+        "action_temp_ban_count": 8,
+        "action_unban_count": 10,
+        "blacklist_count": 10,
+        "session_limit_count": 0,
+        "captcha_success_chart_string": "0,0,10,0,0,0,0",
+        "captcha_failure_chart_string": "0,0,88,0,0,0,0"
+    },
+    "time": 1715743029
+}

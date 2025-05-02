@@ -1,0 +1,103 @@
+<div id="store">
+                                                        <h1 data-food="burger">Produits à fournir:</h1>
+                                                        <section data-food="burger" class="row">
+                                                            <article class="col s12 m6 l4" data-price="5">
+                                                                <div class="card">
+                                                                    <div class="card-image">
+                                                                        <img class="avatar" src="<?=base_url()?>/assets/img/icone-re3.jpeg" title="Flickr picture by Nic Taylor Photography">
+                                                                    </div>
+                                                                    <div class="card-content">
+                                                                        <h3></h3>
+                                                                        <p>Ceci est la description du produit.</p>
+                                                                    </div>
+                                                                    <div class="card-action row">
+                                                                        <a href="#" class="waves-effect waves-light btn red white-text col s12">Ajouter</a>
+                                                                    </div>
+                                                                </div>
+                                                            </article>
+                                                        </section>
+                                                        <h1 data-food="dessert">Nos Desserts</h1>
+                                                        <section data-food="dessert" class="row">
+                                                            <article class="col s12 m6 l4" data-price="10">
+                                                                <div class="card">
+                                                                    <div class="card-image">
+                                                                        <img class="avatar" src="<?=base_url()?>/assets/img/microbio.jpeg" title="Flickr picture by sea turtle">
+                                                                        <span class="card-title">10,00€</span>
+                                                                    </div>
+                                                                    <div class="card-content">
+                                                                        <h3>Glace</h3>
+                                                                        <p>Ceci est la description du produit.</p>
+                                                                    </div>
+                                                                    <div class="card-action row">
+                                                                        <a href="#" class="waves-effect waves-light btn red white-text col s12">Ajouter</a>
+                                                                    </div>
+                                                                </div>
+                                                            </article>
+                                                        </section>
+                                                    </div>
+                                                    <div id="cart" class="row">
+                                                        <ul></ul>
+                                                        <a id="pay" class="waves-effect waves-light orange white-text" >Payer <span class="total">0.00</span>€</a>
+                                                    </div>
+                                                    <!--/Hema feed-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var produits = [
+    { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
+    { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
+    { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
+    { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
+    { "Name": "Ramona Benton", "Age": 32, "Country": 3, "Address": "Ap #614-689 Vehicula Street", "Married": false },
+    { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
+    { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
+    { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
+    { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
+    { "Name": "Ramona Benton", "Age": 32, "Country": 3, "Address": "Ap #614-689 Vehicula Street", "Married": false },
+    { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
+    { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
+    { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
+    { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
+    { "Name": "Ramona Benton", "Age": 32, "Country": 3, "Address": "Ap #614-689 Vehicula Street", "Married": false },
+    { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
+    { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
+    { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
+    { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
+    { "Name": "Ramona Benton", "Age": 32, "Country": 3, "Address": "Ap #614-689 Vehicula Street", "Married": false },
+    { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false },
+    { "Name": "Connor Johnston", "Age": 45, "Country": 2, "Address": "Ap #370-4647 Dis Av.", "Married": true },
+    { "Name": "Lacey Hess", "Age": 29, "Country": 3, "Address": "Ap #365-8835 Integer St.", "Married": false },
+    { "Name": "Timothy Henson", "Age": 56, "Country": 1, "Address": "911-5143 Luctus Ave", "Married": true },
+    { "Name": "Ramona Benton", "Age": 32, "Country": 3, "Address": "Ap #614-689 Vehicula Street", "Married": false }
+];
+
+var categorie = [
+    { Name: "", Id: 0 },
+    { Name: "United States", Id: 1 },
+    { Name: "Canada", Id: 2 },
+    { Name: "United Kingdom", Id: 3 }
+];
+

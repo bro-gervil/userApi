@@ -1,0 +1,61 @@
+{
+    "ip_details": {
+        "127.0.0.1": {
+            "captcha_count": 269,
+            "captcha_success_count": 20,
+            "captcha_failure_count": 249,
+            "pageview_count": 1369,
+            "action_ban_count": 0,
+            "action_temp_ban_count": 22,
+            "action_unban_count": 20,
+            "blacklist_count": 58,
+            "session_limit_count": 0,
+            "captcha_failure_percentage": 0,
+            "captcha_success_percentage": 0,
+            "session_id": {
+                "1097": 1,
+                "fd97": 1,
+                "fce9": 1,
+                "c90e": 1,
+                "d00e": 1,
+                "0ad0": 1,
+                "ff7b": 1,
+                "23a2": 1,
+                "1234": 1,
+                "e5a0": 1,
+                "c45b": 1,
+                "e2d0": 1,
+                "94ba": 1,
+                "b5f1": 1,
+                "598e": 1,
+                "0411": 1,
+                "cfbc": 1,
+                "2fe1": 1,
+                "7909": 1,
+                "1b3e": 1,
+                "8447": 1,
+                "414c": 1
+            }
+        }
+    },
+    "period_data": {
+        "label_chart_string": "'2024.05.01','2024.05.02','2024.05.03','2024.05.04','2024.05.05','2024.05.06','2024.05.07','2024.05.08','2024.05.09','2024.05.10','2024.05.11','2024.05.12','2024.05.13','2024.05.14','2024.05.15','2024.05.16','2024.05.17','2024.05.18','2024.05.19','2024.05.20','2024.05.21','2024.05.22','2024.05.23','2024.05.24','2024.05.25','2024.05.26','2024.05.27'",
+        "captcha_chart_string": "0,0,0,0,0,0,0,0,0,98,0,0,0,0,10,0,0,0,0,14,0,0,0,0,0,0,147",
+        "pageview_chart_string": "0,0,0,0,0,0,0,0,0,48,0,0,0,0,6,0,0,0,0,185,2,376,0,0,0,225,527",
+        "captcha_success_count": 20,
+        "captcha_failure_count": 249,
+        "captcha_count": 269,
+        "pageview_count": 1369,
+        "captcha_percentageage": 16,
+        "captcha_failure_percentage": 93,
+        "captcha_success_percentage": 7,
+        "action_ban_count": 0,
+        "action_temp_ban_count": 22,
+        "action_unban_count": 20,
+        "blacklist_count": 58,
+        "session_limit_count": 0,
+        "captcha_success_chart_string": "0,0,0,0,0,0,0,0,0,10,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,8",
+        "captcha_failure_chart_string": "0,0,0,0,0,0,0,0,0,88,0,0,0,0,10,0,0,0,0,12,0,0,0,0,0,0,139"
+    },
+    "time": 1716796721
+}

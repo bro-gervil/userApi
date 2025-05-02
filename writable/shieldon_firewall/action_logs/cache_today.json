@@ -1,0 +1,21 @@
+{
+    "ip_details": [],
+    "period_data": {
+        "label_chart_string": "",
+        "captcha_chart_string": "",
+        "pageview_chart_string": "",
+        "captcha_success_count": 0,
+        "captcha_failure_count": 0,
+        "captcha_count": 0,
+        "pageview_count": 0,
+        "captcha_percentageage": 0,
+        "captcha_failure_percentage": 0,
+        "captcha_success_percentage": 0,
+        "action_ban_count": 0,
+        "action_temp_ban_count": 0,
+        "action_unban_count": 0,
+        "blacklist_count": 0,
+        "session_limit_count": 0
+    },
+    "time": 1710787659
+}
