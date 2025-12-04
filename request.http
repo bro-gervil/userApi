@@ -1,0 +1,29 @@
+GET http://localhost:3005/users http/1.1
+
+
+###
+GET http://localhost:3005/users/11 http/1.1
+
+###
+POST http://localhost:3005/users http/1.1
+content-type: application/json
+
+{
+    "username" : "rayen555555947955",
+    "bio": "it`s a litle bit about me"
+}
+
+
+###
+PUT http://localhost:3005/users/10 http/1.1
+content-type: application/json
+
+{
+    "username" : "test55555",
+    "bio": "it`s a little bit about me"
+}
+
+
+###
+DELETE http://localhost:3005/users/10 http/1.1
+content-type: application/json
