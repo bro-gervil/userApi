@@ -1,13 +1,13 @@
-# User System API
+# 🌟 User System API
 
 **User System** is an API designed using the **Repository Pattern** to manage users in a PostgreSQL database. It follows a clean architecture approach to separate concerns and make the codebase maintainable and scalable.
 
-## Features
+## 🚀 Features
 - **CRUD operations** for users.
 - Structured using the **Repository Pattern** for better organization.
 - Fully tested to ensure reliability.
 
-## Tech Stack
+## 🛠️ Tech Stack
 - **Node.js** – runtime environment.
 - **PostgreSQL** – database for storing user data.
 - **pg** – Node.js module to connect to PostgreSQL.
@@ -15,7 +15,7 @@
 - **Jest** – test runner for running automated tests.
 - **Supertest** – module to test API endpoints and verify functionality.
 
-## Installation
+## ⚡ Installation
 
 1. Clone the repository:
    ```bash
