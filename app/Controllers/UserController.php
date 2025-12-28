@@ -25,6 +25,7 @@ class UserController extends BaseController
     public function profile_user()
     {
         \CodeIgniter\Events\Events::trigger('product_event');
+        \CodeIgniter\Events\Events::trigger('stock_event');
         \CodeIgniter\Events\Events::trigger('is_user_logged');   
 
         if (auth()->loggedIn()) {
@@ -80,6 +81,7 @@ class UserController extends BaseController
     {
         if (auth()->loggedIn()) {
             \CodeIgniter\Events\Events::trigger('product_event');
+            \CodeIgniter\Events\Events::trigger('stock_event');
             \CodeIgniter\Events\Events::trigger('is_user_logged');   
 
             $user = auth()->user()->username;

@@ -18,6 +18,7 @@ use Event;
 
 //Definition de l'évènement de récupération des produits près à expiration et creation de notification
 define('product_event','product_event');
+define('stock_event','stock_event');
 $groupsModel = new GroupModel();
 
 //Definition de l'évènement de récupération des emails non envoyés et de les envoyer aux utilisateurs concernés
@@ -88,6 +89,7 @@ Events::on('pre_system', static function () {
 });
 
 Events::on('product_event',[$modelformMag,'create_notif_from_expiring_prod'],1);
+Events::on('stock_event',[$modelformMag,'create_notif_from_low_stock'],1);
 Events::on('inventory_event',[$modelInventaire,'inventaire_prod'],1);
 Events::on('mailing',[$Usmodel,'send_mails']);
 

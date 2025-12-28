@@ -141,7 +141,7 @@ Source :  http://www.editeurjavascript.com
             <!--Logo-->
             <div class="col-sm-3 pl-0 text-center header-logo">
                 <div class="bg-gradient-theme mr-3 pt-3 pb-2 mb-0">
-                    <h3 class="logo"><a href="<?= base_url() ?>/#" class="text-secondary logo"> <img class="containering align-self-center mr-3 rounded-circle" src="<?= base_url() ?>/assets/img/labo.svg" width="50px" height="50px" alt="Generic placeholder image">Espace Gestion de<span class="centering">Kits</span></a></h3>
+                    <h3 class="logo"><a href="<?= base_url() ?>/#" class="text-secondary logo"> <img class="containering align-self-center mr-3 rounded-circle" src="<?= base_url() ?>/assets/img/labo.svg" width="50px" height="50px" alt="Generic placeholder image">Espace De Gestion <span class="centering">Kits</span></a></h3>
                 </div>
             </div>
             <!--Logo-->
@@ -166,98 +166,95 @@ Source :  http://www.editeurjavascript.com
                             </a>
 
                             <?php
+                            $GLOBALS['now'] = \CodeIgniter\I18n\Time::now('Africa/Bangui', 'en_US');
 
-                            use CodeIgniter\I18n\Time;
-
-                            $GLOBALS['now'] = Time::now('Africa/Bangui', 'en_US'); //donne la datetime du  moment -> 2024-01-08 23:05
-
-                            echo '
-                                                <div id="notif_body" hidden class="dropdown dropdown-bottom bg-white shadow border animated flipInX" style="display: block; overflow-y:scroll;height:300px;">
-                                                    <a class="dropdown-item text-center" href="#"><strong><span class="text-secondary">Notifications</span></strong></a>
-                                                    <div class="dropdown-divider"></div>
-                                
-                                            ';
-
-                            if (isset($notifications) and $notif_total != 0 and isset($alerts)) {
-
-                                array_map(function ($cat, $al) {
-
-                                    $diff = $GLOBALS['now']->difference($cat['date_notif'])->humanize(); //temps écoulé entre 2 dates -> 12 hours ago ; 3 minutes ago, etc. 
-                                    preg_match('/\d+ \w+/', $diff, $matches); // supprime ago pour récupérer 12 hours
-                                    if (!isset($matches[0])) {
-                                        preg_match('/\w+/', $diff, $matches);
-                                        $duration = $matches[0];
-                                    } else {
-                                        $duration = 'il y a ' . $matches[0];
-                                    }
-
-                                    if ($duration == str_contains($duration, 'hours')) {
-                                        $duration = str_replace('hours', 'heures', $duration);
-                                    } elseif ($duration == str_contains($duration, 'hour')) {
-                                        $duration = str_replace('hour', 'heure', $duration);
-                                    } elseif ($duration == str_contains($duration, 'Just')) {
-                                        $duration = str_replace('Just', 'maintenant', $duration);
-                                    } elseif ($duration == str_contains($duration, 'day')) {
-                                        $duration = str_replace('day', 'jour', $duration);
-                                    } elseif ($duration == str_contains($duration, 'days')) {
-                                        $duration = str_replace('days', 'jours', $duration);
-                                    } elseif ($duration == str_contains($duration, 'month') or $duration == str_contains($duration, 'months')) {
-                                        $duration = str_replace(['month', 'months'], 'mois', $duration);
-                                    } elseif ($duration == str_contains($duration, 'year')) {
-                                        $duration = str_replace('year', 'an', $duration);
-                                    } elseif ($duration == str_contains($duration, 'years')) {
-                                        $duration = str_replace('years', 'ans', $duration);
-                                    }
-
-                                    echo '
-                                                            <a href="#" class="dropdown-item animated jello">
-                                                                <div class="media alert alert-warning alert-dismissible fade show" role="alert">
-                                                                    <div class="align-self-center mr-3 rounded-circle notify-icon bg-warning animated zoomInUp">
-                                                                        <i class="fa fa-exclamation-triangle"></i>
-                                                                    </div>
-                                                                    <div class="media-body">
-                                                                    <h6 class="mt-0 text-secondary animated shake"><strong>' . $cat['type'] . '</strong></h6>
-                                                           
-                                                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                                        <p>' . $cat['contenu'] . '</p>
-                                                                        <div>
-                                                                            <small class="text-secondary"><i style="font-size:6px;" class="fa fa-circle"></i> expire le ' . $al['dateExp'] . '</small>
-                                                                        </div>
-                                                                         <div style="margin-top:5px;">
-                                                                            <small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> identifiant ' . $al['id_prod'] . '</small>
-                                                                        </div>
-                                                                        <div style="margin-top:5px;">
-                                                                            <small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> magasin n°' . $al['id_mag'] . '</small>
-                                                                        </div>
-                                                                        <div style="margin-top:10px;">
-                                                                            <small class="text-primary"><i class="fas fa-clock"></i>' . ' ' . $duration . '</small>
-                                                                        </div>
-                                                                    
-                                                                    </div>
-                                                                </div>
-                                                                <div class="dropdown-divider"></div>
-                                                                <button type="button"  onclick="markAs(' . $cat['id_notif'] . ');" class="close btn fa fa-eye text-primary" data-dismiss="alert" aria-label="Close">
-                                                                            <span aria-hidden="true"></span>
-                                                                </button>
-                                                            </div>';
-                                }, $notifications, $alerts);
-                            } else {
-                                echo '
-                                                <a href="#" class="dropdown-item">
-                                                    <div class="media alert alert-warning alert-dismissible fade show" role="alert">
-                                                        <div class="media-body">
-                                                        <span>Aucune notification pour le moment.</span>
-                                                        </div>
-                                                    </div> 
-                                                </a>';
+                            // Regroupez les alertes par notification
+                            $alertsGroupedByNotif = [];
+                            foreach ($alerts as $alert) {
+                                $alertsGroupedByNotif[$alert['id_notif']][] = $alert;
                             }
 
-                            echo '   <div class="dropdown-divider"></div>
-                                
-                                            </div>
-                                        </a>
-                                            ';
+                            // Affichage des notifications
+                            echo '<div id="notif_body" hidden class="dropdown dropdown-bottom bg-white shadow border animated flipInX" style="display: block; overflow-y:scroll;height:300px;">';
+                            echo '<a class="dropdown-item text-center" href="#"><strong><span class="text-secondary">Notifications</span></strong></a>';
+                            echo '<div class="dropdown-divider"></div>';
 
+                            if (!empty($notifications)) {
+                                foreach ($notifications as $notification) {
+                                    $notifId = $notification['id_notif'];
+                                    $alertsForNotif = $alertsGroupedByNotif[$notifId] ?? [];
+
+                                    // Calculer le temps écoulé
+                                    $diff = $GLOBALS['now']->difference($notification['date_notif'])->humanize();
+                                    preg_match('/\d+ \w+/', $diff, $matches); // recherche du motif
+
+                                    // Vérification si une correspondance a été trouvée
+                                    if (!empty($matches) && isset($matches[0])) {
+                                        $duration = 'il y a ' . $matches[0];
+                                    } else {
+                                        // Recherche alternative ou valeur par défaut
+                                        preg_match('/\w+/', $diff, $matches);
+                                        $duration = !empty($matches) && isset($matches[0]) ? $matches[0] : 'il y a quelques temps';
+                                    }
+                                    //$duration = 'il y a ' . preg_replace('/ago/', '', $diff);
+
+                                    // Traduction
+                                    $duration = str_replace(
+                                        ['hours', 'hour', 'Just', 'day', 'days', 'month', 'months', 'year', 'years'],
+                                        ['heures', 'heure', 'maintenant', 'jour', 'jours', 'mois', 'mois', 'an', 'ans'],
+                                        $duration
+                                    );
+
+                                    // Affichage de la notification
+                                    echo '<a href="#" class="dropdown-item animated jello">';
+                                    echo '<div class="media alert alert-warning alert-dismissible fade show" role="alert">';
+                                    echo '<div class="align-self-center mr-3 rounded-circle notify-icon bg-warning animated zoomInUp">';
+                                    echo '<i class="fa fa-exclamation-triangle"></i>';
+                                    echo '</div>';
+                                    echo '<div class="media-body">';
+                                    echo '<h6 class="mt-0 text-secondary animated shake"><strong>' . esc($notification['type']) . '</strong></h6>';
+                                    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+                                    echo '<p>' . esc($notification['contenu']) . '</p>';
+
+                                    // Affichage des détails des alertes associées
+                                    foreach ($alertsForNotif as $alert) {
+                                        echo '<div style="margin-top:5px;">';
+                                        echo '<small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> Identifiant du stock : ' . esc($alert['id_prod_stock']) . '</small>';
+                                        echo '</div>';
+                                        echo '<div style="margin-top:5px;">';
+                                        echo '<small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> Magasin n°' . esc($alert['id_mag']) . '</small>';
+                                        echo '</div>';
+                                        if ($alert['dateExp'] !== "0000-00-00") {
+                                            echo '<div style="margin-top:5px;">';
+                                            echo '<small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> Date d\'expiration : ' . esc($alert['dateExp']) . '</small>';
+                                            echo '</div>';
+                                        }
+                                    }
+
+                                    echo '<div style="margin-top:10px;">';
+                                    echo '<small class="text-primary"><i class="fas fa-clock"></i> ' . esc($duration) . '</small>';
+                                    echo '</div>';
+                                    echo '</div>';
+                                    echo '</div>';
+                                    echo '<div class="dropdown-divider"></div>';
+                                    echo '<button type="button" onclick="markAs(' . esc($notifId) . ');" class="close btn fa fa-eye text-primary" data-dismiss="alert" aria-label="Close">';
+                                    echo '<span aria-hidden="true"></span>';
+                                    echo '</button>';
+                                    echo '</div>';
+                                    echo '</a>';
+                                }
+                            } else {
+                                echo '<a href="#" class="dropdown-item">';
+                                echo '<div class="media alert alert-warning alert-dismissible fade show" role="alert">';
+                                echo '<div class="media-body">';
+                                echo '<span>Aucune notification pour le moment.</span>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</a>';
+                            }
+
+                            echo '<div class="dropdown-divider"></div>';
+                            echo '</div>';
                             ?>
                         </div>
                         <!--Notication icon-->
@@ -310,8 +307,8 @@ Source :  http://www.editeurjavascript.com
             <!--Sidebar left-->
             <div class="col-sm-3 col-xs-6 sidebar pl-0">
                 <div style="background-color:darkblue" class="inner-sidebar mr-3">
-                    <div class="image animated rotateIn">
-                        <img width="100%" src="<?= base_url() ?>/assets/img/prof1.jpg" alt="logo" class="" />
+                <div style="background-image:url('<?= base_url() ?>/assets/img/prof1_blank.jpg');background-size:cover;" class="image  animated zoomIn">
+                        <img width="30%" src="<?= base_url() ?>/assets/img/prof1.jpg" alt="logo" class="" />
                     </div>
 
                     <!--Sidebar Navigation Menu-->
@@ -413,7 +410,7 @@ Source :  http://www.editeurjavascript.com
                                         <th>Catégorie</th>
                                         <th>Stock entré le:</th>
                                         <th>Expiration :</th>
-                                    <!--    <th>Détails</th> -->
+                                        <!--    <th>Détails</th> -->
                                     </tr>
                                 </thead>
                                 <tbody id="tbod">
@@ -428,13 +425,13 @@ Source :  http://www.editeurjavascript.com
                                                 </td>
                                                 <td id="tab_prod"> <?= $p['desc'] ?></td>
                                                 <td id="tab_unite"> <?= $p['unite'] ?></td>
-            
+
                                                 <?php if ($p['qtite_prod'] > 9) {
                                                     echo "<td class='text-center'>" . $p['qtite_prod'] . "</td>";
                                                 } else {
                                                     echo " <td class='text-center'><span class='fa fa-exclamation-circle text-danger'></span>   " . $p['qtite_prod'] . "</td>";
                                                 } ?>
-                                                 <td class="align-middle">
+                                                <td class="align-middle">
                                                     <?= $p['libelle'] ?>
                                                 </td>
                                                 <td class="align-middle"> <?= $p['dateEntree'] ?></td>
@@ -553,7 +550,7 @@ Source :  http://www.editeurjavascript.com
                                     <div style="background:inherit;" class="mt-1 mb-4 p-3 button-container shadow-lg">
                                         <?php csrf_token() ?>
                                         <form action="" method="post" class="needs-validation" id="createForm" class="mt-3">
-                                        <?php csrf_field() ?>
+                                            <?php csrf_field() ?>
                                             <div class="form-group row">
                                                 <div class="col-sm-4">
                                                     <input name="id_stock" type="number" value="<?= $id_stock ?>" id="input2" class="form-control form-control-sm" hidden />
@@ -1255,7 +1252,7 @@ Source :  http://www.editeurjavascript.com
 
     <!--Script de récupération d'élément du tableau-->
     <script>
-        function editFun(id,id_prod_stock) {
+        function editFun(id, id_prod_stock) {
 
             var user = '<?= $permission ?>';
             if (user == "Utilisateur" || user == "Directeur Général") {
@@ -1291,14 +1288,14 @@ Source :  http://www.editeurjavascript.com
 
     <!--Script d'enregistrement dans la base de données-->
     <script type="text/javascript">
-        $('#id__unite').prop('value',$('#input_unite').find('option:selected').val());
+        $('#id__unite').prop('value', $('#input_unite').find('option:selected').val());
         $('#unite_id').on('change', function(e) {
             e.preventDefault();
             var selectedValue = $(this).find('option:selected').val();
             var selectedText = $(this).find('option:selected').text();
             $('#btn').data('unit_id', selectedValue);
             $('#btn').data('unit_libelle', selectedText);
-            $('#id__unite').prop('value',selectedValue);
+            $('#id__unite').prop('value', selectedValue);
             if (selectedText != "Sélectionnez") {
                 $('#input_unite').val(selectedText);
             }
@@ -1318,7 +1315,7 @@ Source :  http://www.editeurjavascript.com
                 success: function(data) {
                     $('#createForm')[0].reset();
                     //swal('Info', 'Enregistrement effectué avec succès !', 'success');
-                    alert("Entrées en stock:"+data['entr_stock']+"\nStock initial:"+data['stock_ini']+"\nStock physique disponible:"+data['stock_phys_dispo']+"\n");
+                    alert("Entrées en stock:" + data['entr_stock'] + "\nStock initial:" + data['stock_ini'] + "\nStock physique disponible:" + data['stock_phys_dispo'] + "\n");
                 },
             }).done(function(data) {
                 //alert(data['Produit']);
