@@ -177,102 +177,100 @@ Source :  http://www.editeurjavascript.com
                                 <span style="margin-left:6px;" id="badge_notif" class="badge badge-primary"></span>
                             </a>
 
+                            
                             <?php
+                            $GLOBALS['now'] = \CodeIgniter\I18n\Time::now('Africa/Bangui', 'en_US');
 
-                            use CodeIgniter\I18n\Time;
-
-                            $GLOBALS['now'] = Time::now('Africa/Bangui', 'en_US'); //donne la datetime du  moment -> 2024-01-08 23:05
-
-                            echo '
-                                                <div id="notif_body" hidden class="dropdown dropdown-bottom bg-white shadow border animated rubberBand" style="display: block; overflow-y:scroll;height:300px;">
-                                                    <a class="dropdown-item text-center" href="#"><strong><span class="text-secondary">Notifications</span></strong></a>
-                                                    <div class="dropdown-divider"></div>
-                                
-                                            ';
-
-                            if (isset($notifications) and $notif_total != 0 and isset($alerts)) {
-
-                                array_map(function ($cat, $al) {
-
-                                    $diff = $GLOBALS['now']->difference($cat['date_notif'])->humanize(); //temps écoulé entre 2 dates -> 12 hours ago ; 3 minutes ago, etc. 
-                                    preg_match('/\d+ \w+/', $diff, $matches); // supprime ago pour récupérer 12 hours
-                                    if (!isset($matches[0])) {
-                                        preg_match('/\w+/', $diff, $matches);
-                                        $duration = $matches[0];
-                                    } else {
-                                        $duration = 'il y a ' . $matches[0];
-                                    }
-
-                                    if ($duration == str_contains($duration, 'hours')) {
-                                        $duration = str_replace('hours', 'heures', $duration);
-                                    } elseif ($duration == str_contains($duration, 'hour')) {
-                                        $duration = str_replace('hour', 'heure', $duration);
-                                    } elseif ($duration == str_contains($duration, 'Just')) {
-                                        $duration = str_replace('Just', 'maintenant', $duration);
-                                    } elseif ($duration == str_contains($duration, 'day')) {
-                                        $duration = str_replace('day', 'jour', $duration);
-                                    } elseif ($duration == str_contains($duration, 'days')) {
-                                        $duration = str_replace('days', 'jours', $duration);
-                                    } elseif ($duration == str_contains($duration, 'month') or $duration == str_contains($duration, 'months')) {
-                                        $duration = str_replace(['month', 'months'], 'mois', $duration);
-                                    } elseif ($duration == str_contains($duration, 'year')) {
-                                        $duration = str_replace('year', 'an', $duration);
-                                    } elseif ($duration == str_contains($duration, 'years')) {
-                                        $duration = str_replace('years', 'ans', $duration);
-                                    }
-
-                                    echo '
-                                                            <a href="#" class="dropdown-item animated jello">
-                                                                <div class=" scroll-area media alert alert-warning alert-dismissible fade show" role="alert">
-                                                                    <div class="align-self-center mr-3 rounded-circle notify-icon bg-warning animated zoomInUp">
-                                                                        <i class="fa fa-exclamation-triangle"></i>
-                                                                    </div>
-                                                                    <div class="media-body">
-                                                                    <h6 class="mt-0 text-secondary animated shake"><strong>' . $cat['type'] . '</strong></h6>
-                                                           
-                                                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                                        <p>' . $cat['contenu'] . '</p>
-                                                                        <div>
-                                                                            <small class="text-secondary"><i style="font-size:6px;" class="fa fa-circle"></i> expire le ' . $al['dateExp'] . '</small>
-                                                                        </div>
-                                                                         <div style="margin-top:5px;">
-                                                                            <small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> identifiant ' . $al['id_prod'] . '</small>
-                                                                        </div>
-                                                                        <div style="margin-top:5px;">
-                                                                            <small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> magasin n°' . $al['id_mag'] . '</small>
-                                                                        </div>
-                                                                        <div style="margin-top:10px;">
-                                                                            <small class="text-primary"><i class="fas fa-clock"></i>' . ' ' . $duration . '</small>
-                                                                        </div>
-                                                                    
-                                                                    </div>
-                                                                </div>
-                                                                <div class="dropdown-divider"></div>
-                                                                <button type="button" onclick="markAs(' . $cat['id_notif'] . ');" class="close btn fa fa-eye text-primary" data-dismiss="alert" aria-label="Close">
-                                                                            <span aria-hidden="true"></span>
-                                                                </button>
-                                                            </div>';
-                                }, $notifications, $alerts);
-                            } else {
-                                echo '
-                                                <a href="#" class="dropdown-item">
-                                                    <div class="media alert alert-warning alert-dismissible fade show" role="alert">
-                                                        <div class="media-body">
-                                                        <span>Aucune notification pour le moment.</span>
-                                                        </div>
-                                                    </div> 
-                                                </a>';
+                            // Regroupez les alertes par notification
+                            $alertsGroupedByNotif = [];
+                            foreach ($alerts as $alert) {
+                                $alertsGroupedByNotif[$alert['id_notif']][] = $alert;
                             }
 
-                            echo '   <div class="dropdown-divider"></div>
-                                            </div>
-                                        </a>
-                                            ';
+                            // Affichage des notifications
+                            echo '<div id="notif_body" hidden class="dropdown dropdown-bottom bg-white shadow border animated flipInX" style="display: block; overflow-y:scroll;height:300px;">';
+                            echo '<a class="dropdown-item text-center" href="#"><strong><span class="text-secondary">Notifications</span></strong></a>';
+                            echo '<div class="dropdown-divider"></div>';
 
+                            if (!empty($notifications)) {
+                                foreach ($notifications as $notification) {
+                                    $notifId = $notification['id_notif'];
+                                    $alertsForNotif = $alertsGroupedByNotif[$notifId] ?? [];
+
+                                    // Calculer le temps écoulé
+                                    $diff = $GLOBALS['now']->difference($notification['date_notif'])->humanize();
+                                    preg_match('/\d+ \w+/', $diff, $matches); // recherche du motif
+
+                                    // Vérification si une correspondance a été trouvée
+                                    if (!empty($matches) && isset($matches[0])) {
+                                        $duration = 'il y a ' . $matches[0];
+                                    } else {
+                                        // Recherche alternative ou valeur par défaut
+                                        preg_match('/\w+/', $diff, $matches);
+                                        $duration = !empty($matches) && isset($matches[0]) ? $matches[0] : 'il y a quelques temps';
+                                    }
+                                    //$duration = 'il y a ' . preg_replace('/ago/', '', $diff);
+
+                                    // Traduction
+                                    $duration = str_replace(
+                                        ['hours', 'hour', 'Just', 'day', 'days', 'month', 'months', 'year', 'years'],
+                                        ['heures', 'heure', 'maintenant', 'jour', 'jours', 'mois', 'mois', 'an', 'ans'],
+                                        $duration
+                                    );
+
+                                    // Affichage de la notification
+                                    echo '<a href="#" class="dropdown-item animated jello">';
+                                    echo '<div class="media alert alert-warning alert-dismissible fade show" role="alert">';
+                                    echo '<div class="align-self-center mr-3 rounded-circle notify-icon bg-warning animated zoomInUp">';
+                                    echo '<i class="fa fa-exclamation-triangle"></i>';
+                                    echo '</div>';
+                                    echo '<div class="media-body">';
+                                    echo '<h6 class="mt-0 text-secondary animated shake"><strong>' . esc($notification['type']) . '</strong></h6>';
+                                    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+                                    echo '<p>' . esc($notification['contenu']) . '</p>';
+
+                                    // Affichage des détails des alertes associées
+                                    foreach ($alertsForNotif as $alert) {
+                                        echo '<div style="margin-top:5px;">';
+                                        echo '<small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> Identifiant du stock : ' . esc($alert['id_prod_stock']) . '</small>';
+                                        echo '</div>';
+                                        echo '<div style="margin-top:5px;">';
+                                        echo '<small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> Magasin n°' . esc($alert['id_mag']) . '</small>';
+                                        echo '</div>';
+                                        if ($alert['dateExp'] !== "0000-00-00") {
+                                            echo '<div style="margin-top:5px;">';
+                                            echo '<small class="text-secondary"><i style="font-size:6px;" class="text-secondary fa fa-circle"></i> Date d\'expiration : ' . esc($alert['dateExp']) . '</small>';
+                                            echo '</div>';
+                                        }
+                                    }
+
+                                    echo '<div style="margin-top:10px;">';
+                                    echo '<small class="text-primary"><i class="fas fa-clock"></i> ' . esc($duration) . '</small>';
+                                    echo '</div>';
+                                    echo '</div>';
+                                    echo '</div>';
+                                    echo '<div class="dropdown-divider"></div>';
+                                    echo '<button type="button" onclick="markAs(' . esc($notifId) . ');" class="close btn fa fa-eye text-primary" data-dismiss="alert" aria-label="Close">';
+                                    echo '<span aria-hidden="true"></span>';
+                                    echo '</button>';
+                                    echo '</div>';
+                                    echo '</a>';
+                                }
+                            } else {
+                                echo '<a href="#" class="dropdown-item">';
+                                echo '<div class="media alert alert-warning alert-dismissible fade show" role="alert">';
+                                echo '<div class="media-body">';
+                                echo '<span>Aucune notification pour le moment.</span>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</a>';
+                            }
+
+                            echo '<div class="dropdown-divider"></div>';
+                            echo '</div>';
                             ?>
                         </div>
                         <!--Notication icon-->
-
                         <span style="font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; font-weight:300px; left:90%" id="ejs_heure" class="menu-icon">
                             <i class="fa fa-th-large">Initialisation</i>
                         </span>
@@ -322,8 +320,8 @@ Source :  http://www.editeurjavascript.com
             <!--Sidebar left-->
             <div class="col-sm-3 col-xs-6 sidebar pl-0">
                 <div class="inner-sidebar mr-3">
-                    <div class="image  animated zoomIn">
-                        <img width="100%" src="<?= base_url() ?>/assets/img/prof1.jpg" alt="logo" class="" />
+                    <div style="background-image:url('<?= base_url() ?>/assets/img/prof1_blank.jpg');background-size:cover;" class="image  animated zoomIn">
+                        <img width="30%" src="<?= base_url() ?>/assets/img/prof1.jpg" alt="logo" class="" />
                     </div>
 
 
@@ -409,7 +407,7 @@ Source :  http://www.editeurjavascript.com
                             <?php
                             if (isset($poste)) {
                                 foreach ($poste as $key => $cat) {
-                                    echo '  <div class="col-sm-4" style="margin-top:20px;">
+                                    echo '  <div class="col-sm-6" style="margin-top:20px;">
                                 <li class="nav-item">
                                     <div class="menu-icon">
                                         <a type="button" data-toggle="modal" data-id_stock="' . $cat['id_stock'] . '" data-target="#' . $cat['nom_poste'] . 'Modal" role="button">
@@ -548,7 +546,7 @@ Source :  http://www.editeurjavascript.com
                                                     </div>
                                                 
                                                     
-                                                    <div class="card shadow" id="panier' . $cat['nom_poste'] . '">
+                                                    <div style="background-image: url('.base_url().'/assets/img/a.jpeg); background-size:cover;" class="card shadow" id="panier' . $cat['nom_poste'] . '">
                                                         <div style="width:90%; margin-left:5%; padding-top:8px;" class="row">
                                                             <!--Logo-->
                                                             <div style="margin-top: 80px;margin-left:5%;" class="col-sm-12 pl-0  header-logo">
@@ -558,7 +556,7 @@ Source :  http://www.editeurjavascript.com
                                                                         <div class="text-center">
                                                                             <small style="font-weight:600;" class="text-dark">GESTION DES KITS</small>
                                                                         </div>
-                                                                        <img src="'.base_url().'/assets/img/ipb.png" width="110px" id="imgpasteur' . $cat['nom_poste'] . '" alt="Logo Institut Pasteur">
+                                                                        <img src="'.base_url().'/assets/img/prof1.jpg" width="110px" id="imgpasteur' . $cat['nom_poste'] . '" alt="Logo Institut Pasteur">
                                                                         <div style="font-size: 12px;">
                                                                             <small style="padding-left: 0.5%;">UNITES DE SUPPORT</small></br>
                                                                             <small style="padding-left: 4.5%;">*_*_*_*</small></br>

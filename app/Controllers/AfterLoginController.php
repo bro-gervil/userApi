@@ -24,6 +24,7 @@ class AfterLoginController extends BaseController{
            
             // Déclenchement de notre événement ici
             \CodeIgniter\Events\Events::trigger('product_event');
+            \CodeIgniter\Events\Events::trigger('stock_event');
             \CodeIgniter\Events\Events::trigger('is_user_logged');   
            
             $initial = $user[0];

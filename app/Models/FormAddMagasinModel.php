@@ -13,7 +13,7 @@ class FormAddMagasinModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_prod','id_catG','code_barre','desc'];
+    protected $allowedFields    = ['id_prod','id_catG','code_barre','desc','seuil_min'];
 
     // Dates
     protected $useTimestamps = true;
@@ -39,7 +39,12 @@ class FormAddMagasinModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-    
+
+    public function getProduitsSousSeuil()
+    {
+        return $this->where('stock < seuil_min')->findAll();
+    }
+
 
     public function createData1Mag($data){
         $db= \Config\Database::connect();

@@ -192,26 +192,29 @@ class MagasinController extends BaseController
         //l'id du stock
         $idstock = $StockModel->insert(['proprietaire'=>$nom_poste]);
 
-        if(isset($idstock)){
+        if (isset($idstock)) {
+            // Une expression régulière par sa fonction récupérer une partie d'une chaine de caractère
+            $le = str_split($nom_poste); // transformer la chaine de chr en tableau
+            $letter = "/" . $le[0] . "/"; // formater sous forme de regex
+            preg_match($letter, $nom_poste, $matches); // recherche de la chr dans toute la chaine
+            $rech = "/" . $matches[0] . "/";
+            $first_letter_maj = strtoupper($matches[0]); // transforme la partie recherchée en majuscule
         
-            //Une expression régulière par sa fonction récupérer une partie d'une chaine de caractère
-
-            $le = str_split($nom_poste); //transformer la chaine de chr en tableau
-            $letter = "/" . $le[0] . "/"; //formater sous forme de regex
-            preg_match($letter, $nom_poste, $matches); //recherche de la chr dans toute la chaine
-            $rech = "/". $matches[0]."/";
-            $first_letter_maj = strtoupper($matches[0]); //transforme la partie recherchée en majuscule
-            
-            $nom_final = preg_replace($rech,$first_letter_maj,$nom_poste); //Remplacement dans la chaine initiale
-            mkdir("../public/partials/".$nom_final,0775); //creation du repertoire du service créer pour stockage des pdf bLivraison
-
+            $nom_final = preg_replace($rech, $first_letter_maj, $nom_poste); // Remplacement dans la chaine initiale
+            $repertoire = "../public/partials/" . $nom_final;
+        
+            // Vérifiez si le répertoire existe déjà
+            if (!is_dir($repertoire)) {
+                mkdir($repertoire, 0775); // création du répertoire du service créé pour stockage des pdf bLivraison
+            }
+        
             $data1 = array(
                 'nom_poste' => $nom_final,
                 'id_stock' => $idstock,
             );
-
-            $PosteModel ->insert($data1);
-
+        
+            $PosteModel->insert($data1);
+        
             echo json_encode("success");
         }
         else{

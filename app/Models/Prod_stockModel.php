@@ -126,30 +126,28 @@ class Prod_stockModel extends Model
         }
     }
 
-
-    public function create_notif_from_expiring_prod()
+    public function create_notif_from_low_stock()
     {
         $db = \Config\Database::connect();
         $data_alerte = null;
-        $id_stock = null; 
+        $id_stock = null;
 
         $prodstockModel = new \App\Models\Prod_stockModel();
         $magasinModel = new \App\Models\MagasinModel();
         $notificationModel = new \App\Models\NotificationModel();
         $alerteModel = new \App\Models\AlerteModel();
         $vuModel = new \App\Models\VuModel();
-        
-        // Sélectionnez tous les produits qui vont expirer dans 3 mois
-        $products = $this->where('dateExp BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 MONTH)')
-                            ->join('produit','produit.id_prod = prod_stock.id_prod','INNER')
-                            ->findAll();
 
-        foreach ($products as $product) {
+        $product2 = $this->join('produit', 'produit.id_prod = prod_stock.id_prod', 'INNER')
+            ->where('produit.seuil_min > prod_stock.qtite_prod ')
+            ->findAll();
+
+        foreach ($product2 as $product) {
 
             // Créez une nouvelle notification pour chaque produit
             $notificationData = [
-                'contenu' => 'Le stock de ' . $product['desc'] . ' va expirer dans les 3 prochains mois',
-                'type' => 'Alerte',
+                'contenu' => 'Le stock de ' . $product['desc'] . ' est en dessous du seuil minimum, pensez à réapprovisionner le stock',
+                'type' => 'Alerte de niveau de stock',
             ];
 
             //selectionne le stock auquel appartient le produit
@@ -158,9 +156,9 @@ class Prod_stockModel extends Model
             //selectionne le magasin auquel appartient le stock
             $id_magasin = $magasinModel->magasin_by_stock(esc($id_stock));
 
-           $alerte = $alerteModel->alerte_by_produit(esc($product['id_prod']));
+            $alerte = $alerteModel->alerte_by_produit2(esc($product['id_prod_stock']));
 
-            if ((isset($alerte)) && count($alerte)==0) {
+            if ((isset($alerte)) && count($alerte) == 0) {
 
                 $notificationModel->insert(esc($notificationData));
 
@@ -169,6 +167,77 @@ class Prod_stockModel extends Model
 
                 $data_alerte = [
                     'id_prod' => $product['id_prod'],
+                    'type' => 'seuil de stock',
+                    'dateExp' => $product['dateExp'],
+                    'id_prod_stock' => $product['id_prod_stock'],
+                    'id_mag' => $id_magasin,
+                    'id_notif' => $notificationId,
+                ];
+
+                //creation de l'alerte
+                $alerteModel->save_alerte(esc($data_alerte));
+
+                // Associez la notification à tous les utilisateurs
+                $userModel = new \App\Models\UserModel();
+                $users = $userModel->select_allUSers();
+
+
+                foreach ($users as $user) {
+                    $userNotificationData = [
+                        'id_user' => $user['id'],
+                        'id_notif' => $notificationId,
+                        'vu' => 0
+                    ];
+                    $vuModel->insert(esc($userNotificationData));
+                }
+            }
+        }
+    }
+
+
+    public function create_notif_from_expiring_prod()
+    {
+        $db = \Config\Database::connect();
+        $data_alerte = null;
+        $id_stock = null;
+
+        $prodstockModel = new \App\Models\Prod_stockModel();
+        $magasinModel = new \App\Models\MagasinModel();
+        $notificationModel = new \App\Models\NotificationModel();
+        $alerteModel = new \App\Models\AlerteModel();
+        $vuModel = new \App\Models\VuModel();
+
+        // Sélectionnez tous les produits qui vont expirer dans 3 mois
+        $product1 = $this->where('dateExp BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 3 MONTH)')
+            ->join('produit', 'produit.id_prod = prod_stock.id_prod', 'INNER')
+            ->findAll();
+
+        foreach ($product1 as $product) {
+
+            // Créez une nouvelle notification pour chaque produit
+            $notificationData = [
+                'contenu' => 'Le stock de ' . $product['desc'] . ' va expirer dans les 3 prochains mois à la date du '.$product['dateExp'],
+                'type' => 'Alerte pour péremption',
+            ];
+
+            //selectionne le stock auquel appartient le produit
+            $id_stock = $prodstockModel->select_idstock($product['id_prod']);
+
+            //selectionne le magasin auquel appartient le stock
+            $id_magasin = $magasinModel->magasin_by_stock(esc($id_stock));
+
+            $alerte = $alerteModel->alerte_by_produit(esc($product['id_prod_stock']));
+
+            if ((isset($alerte)) && count($alerte) == 0) {
+
+                $notificationModel->insert(esc($notificationData));
+
+                // Obtenez l'ID de la nouvelle notification
+                $notificationId = $db->insertID();
+
+                $data_alerte = [
+                    'id_prod' => $product['id_prod'],
+                    'id_prod_stock' => $product['id_prod_stock'],
                     'dateExp' => $product['dateExp'],
                     'id_mag' => $id_magasin,
                     'id_notif' => $notificationId,
@@ -184,14 +253,13 @@ class Prod_stockModel extends Model
 
                 foreach ($users as $user) {
                     $userNotificationData = [
-                            'id_user' => $user['id'],
-                            'id_notif' => $notificationId,
-                            'vu' => 0
-                        ];
+                        'id_user' => $user['id'],
+                        'id_notif' => $notificationId,
+                        'vu' => 0
+                    ];
                     $vuModel->insert(esc($userNotificationData));
                 }
             }
-        }
+        }    
     }
-
 }

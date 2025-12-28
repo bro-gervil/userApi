@@ -13,7 +13,7 @@ class AlerteModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_al','id_prod','id_mag','id_notif','dateExp'];
+    protected $allowedFields    = ['id_al','id_prod','id_prod_stock','id_mag','id_notif','dateExp','type'];
 
     // Dates
     protected $useTimestamps = false;
@@ -73,11 +73,19 @@ class AlerteModel extends Model
         return $row;
     }
 
-    //Sélectionner un magsin via son id_stock
+    //Sélectionner une alerte via son id_prod
     
-    public function alerte_by_produit($id_prod){
+    public function alerte_by_produit($id_prod_stock){
         $builder = $this;
-        $builder->select('id_prod')->where('id_prod',esc($id_prod));
+        $builder->select('id_prod')->where('id_prod_stock',esc($id_prod_stock));
+        $query = $builder->get();
+        $row = $query->getResultArray();
+        
+        return $row;
+    }
+    public function alerte_by_produit2($id_prod_stock){
+        $builder = $this;
+        $builder->select('id_prod')->where(['id_prod_stock'=>esc($id_prod_stock),'type'=>'seuil de stock']);
         $query = $builder->get();
         $row = $query->getResultArray();
         
@@ -88,7 +96,7 @@ class AlerteModel extends Model
     {
         $user_id = user_id();
         $db = \Config\Database::connect();
-        $builder = $db->table('alerte')->select('alerte.id_al,alerte.id_prod,alerte.id_mag,alerte.dateExp,vu.id_vu,vu.date_vu,vu.id_user,vu.vu')->join('vu', 'vu.id_notif=alerte.id_notif', 'inner')
+        $builder = $db->table('alerte')->select('alerte.id_al,alerte.id_prod,alerte.id_mag,alerte.dateExp,vu.id_vu,vu.date_vu,vu.id_user,vu.vu,alerte.id_prod_stock,alerte.id_notif')->join('vu', 'vu.id_notif=alerte.id_notif', 'inner')
         ->where(array('vu.vu' => 0, 'vu.id_user' =>esc($user_id)))->orderBy('alerte.id_notif', 'DESC');
         $query = $builder->get();
 

@@ -43,7 +43,7 @@ class Pages extends BaseController {
             //Events::trigger('product_event');
              // Déclenchez votre événement ici
         \CodeIgniter\Events\Events::trigger('product_event');
-        //\CodeIgniter\Events\Events::trigger('is_user_logged');
+        \CodeIgniter\Events\Events::trigger('stock_event');
         \CodeIgniter\Events\Events::trigger('mailing');
    
             $initial = $user[0];
@@ -138,6 +138,7 @@ class Pages extends BaseController {
     public function suivi()
     {
         \CodeIgniter\Events\Events::trigger('product_event');
+        \CodeIgniter\Events\Events::trigger('stock_event');
         \CodeIgniter\Events\Events::trigger('is_user_logged');     
         if (auth()->loggedIn()) {
             $user = auth()->user()->username;
@@ -197,6 +198,7 @@ class Pages extends BaseController {
       public function inventaire()
       {
           \CodeIgniter\Events\Events::trigger('product_event');
+          \CodeIgniter\Events\Events::trigger('stock_event');
           \CodeIgniter\Events\Events::trigger('is_user_logged');     
           if (auth()->loggedIn()) {
               $user = auth()->user()->username;
@@ -264,6 +266,7 @@ class Pages extends BaseController {
     public function formAjoutP()
     {
         \CodeIgniter\Events\Events::trigger('product_event');
+        \CodeIgniter\Events\Events::trigger('stock_event');
         \CodeIgniter\Events\Events::trigger('is_user_logged');     
         if (auth()->loggedIn()) {
             $user = auth()->user()->username;
@@ -355,7 +358,8 @@ class Pages extends BaseController {
 
     //Pour afficher une page Magasin
     public function liste_produit_magasin($id_stock,$id_mag)
-    {   \CodeIgniter\Events\Events::trigger('product_event'); 
+    {   \CodeIgniter\Events\Events::trigger('product_event');
+        \CodeIgniter\Events\Events::trigger('stock_event'); 
         \CodeIgniter\Events\Events::trigger('is_user_logged');   
 
         $id_stock= $this->request->getUri()->getSegment(3);
@@ -416,7 +420,12 @@ class Pages extends BaseController {
         $data['id_stock'] = $id_stock;
         $data['num_magasin']='Magasin N°'.$id_mag;
         $data['id_mag'] = $id_mag;
-        $data['nummag'] = $num_mag['num_magasin'];
+        if($num_mag !=null){
+            $data['nummag'] = $num_mag['num_magasin'];
+        }
+        else{
+            $data['nummag'] = "Aucun lieu de stockage";
+        }
         $data['permission'] = $test;
         echo view('magasin/liste_produit_magasin', $data);
     }
